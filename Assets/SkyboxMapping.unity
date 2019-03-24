@@ -185,14 +185,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 970745055}
-  m_LocalRotation: {x: -0.119471714, y: -0.8637833, z: -0.42503405, w: 0.2427986}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1498019024}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -52.4, y: -148.6, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1498019020
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,7 +271,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1498019020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.7}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 970745059}
@@ -307,6 +307,8 @@ MonoBehaviour:
   cameraPosition: {fileID: 970745059}
   postitionOffset: 0.4
   patchMesh: {fileID: 1498019021}
+  panoramaTexture: {fileID: 2800000, guid: 6512543c28ea3f946a39bce06c4c98ac, type: 3}
+  imageSize: {x: 512, y: 512}
   patchName: patch
 --- !u!4 &1817605457
 Transform:

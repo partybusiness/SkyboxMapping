@@ -34,7 +34,7 @@
 				float latitude = acos(normalizedCoords.y);
 				float longitude = atan2(normalizedCoords.z, normalizedCoords.x);
 				float2 sphereCoords = float2(longitude, latitude) * float2(0.5 / UNITY_PI, 1.0 / UNITY_PI);
-				return float2(-0.25, 1.0) - sphereCoords;//???
+				return float2(-0.25, 1.0) - sphereCoords;//Quarter offset is arbitrary but matches how the Cubemap is sampled in Unity
 			}
 
 			vertexOutput vert(vertexInput input)
@@ -56,7 +56,7 @@
 				//how to map latlong
 				latlong.x = (latlong.x - _MinX) / (_MaxX - _MinX);
 				latlong.y = (latlong.y - _MinY) / (_MaxY - _MinY);
-				return tex2D(_Patch, latlong);
+				return tex2D(_Patch, latlong)*1.1;
 			}
 			ENDCG
 		}
