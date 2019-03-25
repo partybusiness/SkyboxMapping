@@ -80,6 +80,17 @@ public class CreatePanoramaPatch : MonoBehaviour {
         Graphics.Blit(panoramaTexture, goalRender, blitMaterial, -1);
         SaveRenderImage(goalRender);
         //save material?
+        var patchMaterial = new Material(Shader.Find("Unlit/FromPatchToSkybox"));
+        patchMaterial.SetFloat("_MinX", minX);
+        patchMaterial.SetFloat("_MaxX", maxX);
+        patchMaterial.SetFloat("_MinY", minY);
+        patchMaterial.SetFloat("_MaxY", maxY);
+
+        var savedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/GeneratedTextures/" + patchName + ".png");
+
+        patchMaterial.SetTexture("_Patch", savedTexture);
+        AssetDatabase.CreateAsset(patchMaterial, "Assets/GeneratedMaterials/"+patchName+".mat");
+        patchMesh.material = patchMaterial;
     }
 
     private void SaveRenderImage(RenderTexture goalRender)
