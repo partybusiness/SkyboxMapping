@@ -2,10 +2,10 @@
 {
 	Properties{
 		[NoScaleOffset]_Patch("Patch Map", 2D) = "white" {}
-		_MinX("MinX", Range(0.0,1.0)) = 0.0
-		_MaxX("MaxX", Range(0.0,1.0)) = 1.0
-		_MinY("MinY", Range(0.0,1.0)) = 0.0
-		_MaxY("MaxY", Range(0.0,1.0)) = 1.0
+		_MinX("MinX", float) = 0.0
+		_MaxX("MaxX", float) = 1.0
+		_MinY("MinY", float) = 0.0
+		_MaxY("MaxY", float) = 1.0
 	}
 	SubShader{
 		Pass{

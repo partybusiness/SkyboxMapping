@@ -23,19 +23,20 @@
 
 			struct vertexInput {
 				float4 vertex : POSITION;
-				float3 normal : NORMAL;
+				float2 uv : TEXCOORD0;
 			};
 			struct vertexOutput {
 				float4 pos : SV_POSITION;
-				float3 viewDir : TEXCOORD0;
+				float2 uv : TEXCOORD0;
 			};
 			vertexOutput vert(vertexInput input)
 			{
 				vertexOutput output;
 
 				float4x4 modelMatrix = unity_ObjectToWorld;
-				output.viewDir = mul(modelMatrix, input.vertex).xyz
-					- _WorldSpaceCameraPos;
+				//output.viewDir = mul(modelMatrix, input.vertex).xyz
+				//	- _WorldSpaceCameraPos;
+				output.uv = input.uv;
 				output.pos = UnityObjectToClipPos(input.vertex);
 				return output;
 			}
@@ -68,11 +69,11 @@
 
 			float4 frag(vertexOutput input) : COLOR
 			{
-				float2 uv = input.viewDir.xy;
+				float2 uv = input.uv;
 				uv.x = lerp(_MinX, _MaxX, uv.x);
 				uv.y = lerp(_MinY, _MaxY, uv.y);
 				return tex2D(_MainTex, uv);
-				//float4(input.viewDir.xy,input.viewDir.z,1);// texCUBE(_Cube, input.viewDir);
+				//return float4(input.uv,1,1);// texCUBE(_Cube, input.viewDir);
 			}
 			ENDCG
 		}

@@ -59,7 +59,7 @@ public class CreatePanoramaPatch : MonoBehaviour {
         foreach (var vertex in vertices)
         {
             var rp = RelativePosition(vertex);
-            var ll = PositionToLatLong(rp);
+            var ll = PositionToLatLong(rp)/Mathf.PI;
             if (ll.x < 0) ll.x += 1f;
             if (ll.y < 0) ll.y += 1f;
 
@@ -70,6 +70,10 @@ public class CreatePanoramaPatch : MonoBehaviour {
         }
 
         Debug.LogFormat("{0},{1}  |  {2},{3}   {4} {5}", minX, minY, maxX, maxY, maxX - minX, (maxY-minY));
+        minX = 0.4f;
+        maxX = 0.6f;
+        minY = 0.5f;        
+        maxY = 0.7f;
 
         var goalRender = new RenderTexture(Mathf.RoundToInt(imageSize.x), Mathf.RoundToInt(imageSize.y), 16);
         var blitMaterial = new Material(Shader.Find("Unlit/FromSkyboxToPatch"));
@@ -85,6 +89,10 @@ public class CreatePanoramaPatch : MonoBehaviour {
         patchMaterial.SetFloat("_MaxX", maxX);
         patchMaterial.SetFloat("_MinY", minY);
         patchMaterial.SetFloat("_MaxY", maxY);
+        //patchMaterial.SetFloat("_OffsetX", minX);
+        //patchMaterial.SetFloat("_OffsetY", maxX);
+        //patchMaterial.SetFloat("_Width", 0.5f);
+        //patchMaterial.SetFloat("_Height", 0.5f);
 
         var savedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/GeneratedTextures/" + patchName + ".png");
 
@@ -108,11 +116,16 @@ public class CreatePanoramaPatch : MonoBehaviour {
 
     private Vector2 PositionToLatLong(Vector3 coords)
     {
+        /* 
+         float latitude = Mathf.Acos(normalizedCoords.y);
+         float longitude = Mathf.Atan2(normalizedCoords.z, normalizedCoords.x);
+         Vector2 sphereCoords = new Vector2(longitude * 0.5f / Mathf.PI, latitude* 1.0f / Mathf.PI);
+        return new Vector2(-0.25f, 1.0f) - sphereCoords;//-.25 offset is arbitrary but it matches how cubemaps are sampled in Unity
+        */
         var normalizedCoords = coords.normalized;
         float latitude = Mathf.Acos(normalizedCoords.y);
         float longitude = Mathf.Atan2(normalizedCoords.z, normalizedCoords.x);
-        Vector2 sphereCoords = new Vector2(longitude * 0.5f / Mathf.PI, latitude* 1.0f / Mathf.PI);
-        return new Vector2(-0.25f, 1.0f) - sphereCoords;//-.25 offset is arbitrary but it matches how cubemaps are sampled in Unity
+        return new Vector2(-longitude+Mathf.PI/2f, latitude -Mathf.PI/2f);//-.25 offset is arbitrary but it matches how cubemaps are sampled in Unity
     }
 
     private Vector3 RelativePosition(Vector3 vertexPosition)
@@ -125,5 +138,15 @@ public class CreatePanoramaPatch : MonoBehaviour {
 
         return 0;
     }
+
+    [ExecuteInEditMode]
+    void Update()
+    {
+        var angles = PositionToLatLong(patchMesh.transform.position - cameraPosition.position);
+        var rotatedAngle = Quaternion.Euler(0, angles.x * Mathf.Rad2Deg, 0) * Quaternion.Euler(angles.y * Mathf.Rad2Deg, 0, 0);// new Vector3(,, 0);
+        var rayForward = rotatedAngle * Vector3.forward;
+        Debug.DrawRay(cameraPosition.position, rayForward * 30f, Color.red);
+    }
+
 
 }
