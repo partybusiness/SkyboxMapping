@@ -69,26 +69,35 @@ public class CreatePanoramaPatch : MonoBehaviour {
             maxY = Mathf.Max(maxY, ll.y);
         }
 
-        Debug.LogFormat("{0},{1}  |  {2},{3}   {4} {5}", minX, minY, maxX, maxY, maxX - minX, (maxY-minY));
-        minX = 0.4f;
-        maxX = 0.6f;
-        minY = 0.5f;        
-        maxY = 0.7f;
+        var objectLatLong = PositionToLatLong(patchMesh.transform.position - cameraPosition.position);
+
+        //Debug.LogFormat("{0},{1}  |  {2},{3}   {4} {5}", minX, minY, maxX, maxY, maxX - minX, (maxY-minY));
+        //minX = 0f;
+        //maxX = 1f;
+        //minY = 0f;        
+        //maxY = 1f;
 
         var goalRender = new RenderTexture(Mathf.RoundToInt(imageSize.x), Mathf.RoundToInt(imageSize.y), 16);
         var blitMaterial = new Material(Shader.Find("Unlit/FromSkyboxToPatch"));
-        blitMaterial.SetFloat("_MinX", minX);
-        blitMaterial.SetFloat("_MaxX", maxX);
-        blitMaterial.SetFloat("_MinY", minY);
-        blitMaterial.SetFloat("_MaxY", maxY);
+        Debug.LogFormat("rendering at position {0},{1} ", objectLatLong.x, objectLatLong.y);
+        blitMaterial.SetFloat("_OffsetX", objectLatLong.x);
+        blitMaterial.SetFloat("_OffsetY", objectLatLong.y);
+        blitMaterial.SetFloat("_Height", 0.3f);
+        blitMaterial.SetFloat("_Width", 0.3f);
+        //blitMaterial.SetFloat("_MinX", minX);
+        //blitMaterial.SetFloat("_MaxX", maxX);
+        //blitMaterial.SetFloat("_MinY", minY);
+        //blitMaterial.SetFloat("_MaxY", maxY);
         Graphics.Blit(panoramaTexture, goalRender, blitMaterial, -1);
         SaveRenderImage(goalRender);
         //save material?
         var patchMaterial = new Material(Shader.Find("Unlit/FromPatchToSkybox"));
-        patchMaterial.SetFloat("_MinX", minX);
-        patchMaterial.SetFloat("_MaxX", maxX);
-        patchMaterial.SetFloat("_MinY", minY);
-        patchMaterial.SetFloat("_MaxY", maxY);
+        patchMaterial.SetFloat("_OffsetX", objectLatLong.x);
+        patchMaterial.SetFloat("_OffsetY", objectLatLong.y);
+        patchMaterial.SetFloat("_Height", 0.3f);
+        patchMaterial.SetFloat("_Width", 0.3f);
+        //patchMaterial.SetFloat("_MinY", minY);
+        //patchMaterial.SetFloat("_MaxY", maxY);
         //patchMaterial.SetFloat("_OffsetX", minX);
         //patchMaterial.SetFloat("_OffsetY", maxX);
         //patchMaterial.SetFloat("_Width", 0.5f);
@@ -116,16 +125,17 @@ public class CreatePanoramaPatch : MonoBehaviour {
 
     private Vector2 PositionToLatLong(Vector3 coords)
     {
-        /* 
-         float latitude = Mathf.Acos(normalizedCoords.y);
-         float longitude = Mathf.Atan2(normalizedCoords.z, normalizedCoords.x);
-         Vector2 sphereCoords = new Vector2(longitude * 0.5f / Mathf.PI, latitude* 1.0f / Mathf.PI);
-        return new Vector2(-0.25f, 1.0f) - sphereCoords;//-.25 offset is arbitrary but it matches how cubemaps are sampled in Unity
-        */
         var normalizedCoords = coords.normalized;
         float latitude = Mathf.Acos(normalizedCoords.y);
+         float longitude = Mathf.Atan2(normalizedCoords.z, normalizedCoords.x);
+        //return new Vector2(longitude, latitude);
+         Vector2 sphereCoords = new Vector2((longitude * 0.5f) / Mathf.PI, (latitude* 1.0f) / Mathf.PI);
+        return new Vector2(-0.25f, 1.0f) - sphereCoords;//-.25 offset is arbitrary but it matches how cubemaps are sampled in Unity
+        
+      /*  var normalizedCoords = coords.normalized;
+        float latitude = Mathf.Acos(normalizedCoords.y);
         float longitude = Mathf.Atan2(normalizedCoords.z, normalizedCoords.x);
-        return new Vector2(-longitude+Mathf.PI/2f, latitude -Mathf.PI/2f);//-.25 offset is arbitrary but it matches how cubemaps are sampled in Unity
+        return new Vector2(-longitude+Mathf.PI/2f, latitude -Mathf.PI/2f);//- */
     }
 
     private Vector3 RelativePosition(Vector3 vertexPosition)
@@ -139,14 +149,21 @@ public class CreatePanoramaPatch : MonoBehaviour {
         return 0;
     }
 
+    Vector2 angles;
+
     [ExecuteInEditMode]
     void Update()
     {
-        var angles = PositionToLatLong(patchMesh.transform.position - cameraPosition.position);
+        angles = PositionToLatLong(patchMesh.transform.position - cameraPosition.position);
         var rotatedAngle = Quaternion.Euler(0, angles.x * Mathf.Rad2Deg, 0) * Quaternion.Euler(angles.y * Mathf.Rad2Deg, 0, 0);// new Vector3(,, 0);
         var rayForward = rotatedAngle * Vector3.forward;
         Debug.DrawRay(cameraPosition.position, rayForward * 30f, Color.red);
+        
     }
 
+    private void OnGUI()
+    {
+        Handles.Label(patchMesh.transform.position, string.Format("{0} {1}", angles.x.ToString("F2"), angles.y.ToString("F2")));
+    }
 
 }

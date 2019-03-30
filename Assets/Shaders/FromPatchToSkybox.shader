@@ -2,10 +2,10 @@
 {
 	Properties{
 		[NoScaleOffset]_Patch("Patch Map", 2D) = "white" {}
-		_MinX("MinX", float) = 0.0
-		_MaxX("MaxX", float) = 1.0
-		_MinY("MinY", float) = 0.0
-		_MaxY("MaxY", float) = 1.0
+		_OffsetX("OffsetX", float) = 0.0
+		_OffsetY("OffsetY", float) = 0.0
+		_Width("Width", float) = 0.3
+		_Height("Height", float) = 0.3
 	}
 	SubShader{
 		Pass{
@@ -14,10 +14,10 @@
 			#pragma fragment frag
 			#include "UnityCG.cginc"
 			sampler2D _Patch;
-			float _MinX;
-			float _MaxX;
-			float _MinY;
-			float _MaxY;
+			float _OffsetX;
+			float _OffsetY;
+			float _Width;
+			float _Height;
 			
 
 			struct vertexInput {
@@ -50,13 +50,13 @@
 				output.pos = UnityObjectToClipPos(input.vertex);
 				return output;
 			}
+
 			float4 frag(vertexOutput input) : COLOR
 			{
 				float2 latlong = ToRadialCoords(input.viewDir);
-				//how to map latlong
-				latlong.x = (latlong.x - _MinX) / (_MaxX - _MinX);
-				latlong.y = (latlong.y - _MinY) / (_MaxY - _MinY);
-				return tex2D(_Patch, latlong)*1.1;
+				latlong.x = (latlong.x - _OffsetX + _Width * 0.5) / _Width;
+				latlong.y = (latlong.y - _OffsetY + _Height * 0.5) / _Height;
+				return tex2D(_Patch, latlong);
 			}
 			ENDCG
 		}
