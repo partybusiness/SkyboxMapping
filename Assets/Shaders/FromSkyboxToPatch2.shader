@@ -78,18 +78,6 @@
 		viewDir += (uv.x - 0.5)*orthoX;
 		viewDir += (uv.y - 0.5)*orthoY;
 
-		//
-		//if ((round(uv.x*10) + round(uv.y*10))%2 == 1) {
-		//return float4(uv, 1,1);
-		//}
-		//uv.x = lerp(_OffsetX - _Width * 0.5, _OffsetX + _Width * 0.5, uv.x);
-		//uv.y = lerp(_OffsetY - _Height * 0.5, _OffsetY + _Height * 0.5, uv.y);
-		//return float4(uv, 1, 1);
-
-		//return tex2D(_MainTex, uv);
-		//return float4(input.uv,1,1);
-
-
 		return texCUBE(_Cube, normalize(viewDir));
 	}
 		ENDCG

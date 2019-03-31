@@ -57,7 +57,7 @@ public class CreatePanoramaPatch : MonoBehaviour {
         var minY = Mathf.Infinity;
         var maxY = -Mathf.Infinity;
 
-        //loop through all points in the mesh?
+        //loop through all points in the mesh
         var vertices = sourceMesh.vertices;
         foreach (var vertex in vertices)
         {
@@ -71,14 +71,13 @@ public class CreatePanoramaPatch : MonoBehaviour {
             minY = Mathf.Min(minY, ll.y);
             maxY = Mathf.Max(maxY, ll.y);
         }
-
-        var objectLatLong = PositionToLatLong(patchMesh.transform.position - cameraPosition.position);
-
-        //Debug.LogFormat("{0},{1}  |  {2},{3}   {4} {5}", minX, minY, maxX, maxY, maxX - minX, (maxY-minY));
-        //minX = 0f;
-        //maxX = 1f;
-        //minY = 0f;        
-        //maxY = 1f;
+        var patchBounds = patchMesh.bounds;
+        
+        var objectLatLong = PositionToLatLong(patchBounds.center - cameraPosition.position);
+        var minCornerLatLong = PositionToLatLong(patchBounds.min - cameraPosition.position);
+        var maxCornerLatLong = PositionToLatLong(patchBounds.max - cameraPosition.position);
+        //TODO find closest corners?
+        //use corners to set width and height
 
         var goalRender = new RenderTexture(Mathf.RoundToInt(imageSize.x), Mathf.RoundToInt(imageSize.y), 16);
         var blitMaterial = new Material(Shader.Find("Unlit/FromSkyboxToPatch2"));
