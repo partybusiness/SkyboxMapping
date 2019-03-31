@@ -38,6 +38,9 @@ public class CreatePanoramaPatch : MonoBehaviour {
     private Texture panoramaTexture;
 
     [SerializeField]
+    private Cubemap cubemap;
+
+    [SerializeField]
     private Vector2 imageSize = new Vector2(512,512);
 
     [SerializeField]
@@ -78,8 +81,9 @@ public class CreatePanoramaPatch : MonoBehaviour {
         //maxY = 1f;
 
         var goalRender = new RenderTexture(Mathf.RoundToInt(imageSize.x), Mathf.RoundToInt(imageSize.y), 16);
-        var blitMaterial = new Material(Shader.Find("Unlit/FromSkyboxToPatch"));
+        var blitMaterial = new Material(Shader.Find("Unlit/FromSkyboxToPatch2"));
         Debug.LogFormat("rendering at position {0},{1} ", objectLatLong.x, objectLatLong.y);
+        blitMaterial.SetTexture("_Cube", cubemap);
         blitMaterial.SetFloat("_OffsetX", objectLatLong.x);
         blitMaterial.SetFloat("_OffsetY", objectLatLong.y);
         blitMaterial.SetFloat("_Height", 0.3f);
@@ -91,7 +95,7 @@ public class CreatePanoramaPatch : MonoBehaviour {
         Graphics.Blit(panoramaTexture, goalRender, blitMaterial, -1);
         SaveRenderImage(goalRender);
         //save material?
-        var patchMaterial = new Material(Shader.Find("Unlit/FromPatchToSkybox"));
+        var patchMaterial = new Material(Shader.Find("Unlit/FromPatchToSkybox2"));
         patchMaterial.SetFloat("_OffsetX", objectLatLong.x);
         patchMaterial.SetFloat("_OffsetY", objectLatLong.y);
         patchMaterial.SetFloat("_Height", 0.3f);

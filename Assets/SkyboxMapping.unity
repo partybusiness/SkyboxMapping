@@ -185,14 +185,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 970745055}
-  m_LocalRotation: {x: 0, y: 0.9211175, z: 0.38928476, w: 0}
+  m_LocalRotation: {x: 0.34518248, y: -0.27020386, z: 0.104479745, w: 0.89270544}
   m_LocalPosition: {x: 0.3, y: -0.1, z: -0.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1498019024}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -45.82, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 42.28, y: -33.68, z: 0}
 --- !u!1 &1498019020
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,7 +258,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1498019020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.2}
+  m_LocalPosition: {x: 0, y: 0, z: 2.4}
   m_LocalScale: {x: 1.97, y: 1.09, z: 1.09}
   m_Children: []
   m_Father: {fileID: 970745059}
@@ -295,6 +295,7 @@ MonoBehaviour:
   postitionOffset: 0.4
   patchMesh: {fileID: 1498019021}
   panoramaTexture: {fileID: 2800000, guid: e348f2634ca177e46925377f9bfdac7d, type: 3}
+  cubemap: {fileID: 8900000, guid: 960117cc147d0574093932fffa169fbd, type: 3}
   imageSize: {x: 512, y: 512}
   patchName: patch
 --- !u!4 &1817605457
