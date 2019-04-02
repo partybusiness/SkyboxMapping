@@ -16,7 +16,8 @@ public class CreatePanoramaPatch : MonoBehaviour {
             CreatePanoramaPatch patchMaker = (CreatePanoramaPatch)target;
             if (GUILayout.Button("Generate Patch Texture"))
             {
-                patchMaker.GeneratePatchTexture();
+                //hypothetically, I could loop through a list of textures and generate suffixes for each
+                patchMaker.GeneratePatchTexture(patchMaker.panoramaTexture,"");
             }
             serializedObject.ApplyModifiedProperties();
         }
@@ -29,7 +30,7 @@ public class CreatePanoramaPatch : MonoBehaviour {
     /// How far in any direction should the camera be able to move
     /// </summary>
     [SerializeField]
-    float postitionOffset = 0.4f;
+    float positionOffset = 0.4f;
 
     [SerializeField]
     private MeshRenderer patchMesh;
@@ -46,69 +47,72 @@ public class CreatePanoramaPatch : MonoBehaviour {
     [SerializeField]
     private string patchName = "patch";
 
-    public void GeneratePatchTexture()
+    private Vector2 MaxOffset(Vector3 centre, Vector3 size)
+    {
+        Debug.Log(size);
+        var results = Vector2.zero;
+        var direction = centre.normalized;
+        var orthoX = Vector3.Cross(-direction, Vector3.up);
+        var orthoY = Vector3.Cross(direction, orthoX);
+
+        //check every corner and find max offset for x and y
+        for (int i = 0; i < 8; i++) {
+            var corner = centre + new Vector3(size.x * ((i & 1) > 0 ? 1 : -1), size.y * ((i & 2) > 0 ? 1 : -1), size.z * ((i & 4) > 0 ? 1 : -1));
+            corner = corner.normalized;
+            var cornerResults = new Vector2(Mathf.Abs(Vector3.Dot(orthoX, corner)), Mathf.Abs(Vector3.Dot(orthoY, corner)));
+            var parallel = Vector3.Dot(corner,direction);
+            cornerResults /= parallel;
+            results.x = Mathf.Max(results.x, cornerResults.x);
+            results.y = Mathf.Max(results.y, cornerResults.y);
+        }
+
+        
+
+        
+        return results*2f;
+    } 
+
+    public void GeneratePatchTexture(Texture sourceTexture, string imageOffset = "")
     {
         //find min and max for selected mesh
         var patchTransform = patchMesh.transform;
         var patchMF = patchMesh.GetComponent<MeshFilter>();
         var sourceMesh = patchMF.sharedMesh;
-        var minX = Mathf.Infinity;
-        var maxX = -Mathf.Infinity;
-        var minY = Mathf.Infinity;
-        var maxY = -Mathf.Infinity;
-
-        //loop through all points in the mesh
-        var vertices = sourceMesh.vertices;
-        foreach (var vertex in vertices)
-        {
-            var rp = RelativePosition(vertex);
-            var ll = PositionToLatLong(rp)/Mathf.PI;
-            if (ll.x < 0) ll.x += 1f;
-            if (ll.y < 0) ll.y += 1f;
-
-            minX = Mathf.Min(minX, ll.x);
-            maxX = Mathf.Max(maxX, ll.x);
-            minY = Mathf.Min(minY, ll.y);
-            maxY = Mathf.Max(maxY, ll.y);
-        }
-        var patchBounds = patchMesh.bounds;
         
-        var objectLatLong = PositionToLatLong(patchBounds.center - cameraPosition.position);
-        var minCornerLatLong = PositionToLatLong(patchBounds.min - cameraPosition.position);
-        var maxCornerLatLong = PositionToLatLong(patchBounds.max - cameraPosition.position);
-        //TODO find closest corners?
-        //use corners to set width and height
 
+        var patchBounds = patchMesh.bounds;
+        var patchLatLong = PositionToLatLong(patchBounds.center - cameraPosition.position);
+
+        //find ratio between distance and offset
+        var widths = MaxOffset(patchBounds.center - cameraPosition.position, patchBounds.size / 2f + (Vector3.one * positionOffset));
+        
         var goalRender = new RenderTexture(Mathf.RoundToInt(imageSize.x), Mathf.RoundToInt(imageSize.y), 16);
         var blitMaterial = new Material(Shader.Find("Unlit/FromSkyboxToPatch2"));
-        Debug.LogFormat("rendering at position {0},{1} ", objectLatLong.x, objectLatLong.y);
+        
         blitMaterial.SetTexture("_Cube", cubemap);
-        blitMaterial.SetFloat("_OffsetX", objectLatLong.x);
-        blitMaterial.SetFloat("_OffsetY", objectLatLong.y);
-        blitMaterial.SetFloat("_Height", 0.3f);
-        blitMaterial.SetFloat("_Width", 0.3f);
-        //blitMaterial.SetFloat("_MinX", minX);
-        //blitMaterial.SetFloat("_MaxX", maxX);
-        //blitMaterial.SetFloat("_MinY", minY);
-        //blitMaterial.SetFloat("_MaxY", maxY);
-        Graphics.Blit(panoramaTexture, goalRender, blitMaterial, -1);
+        blitMaterial.SetFloat("_OffsetX", patchLatLong.x);
+        blitMaterial.SetFloat("_OffsetY", patchLatLong.y);
+        blitMaterial.SetFloat("_Height", widths.x);
+        blitMaterial.SetFloat("_Width", widths.y);
+
+        Debug.LogFormat("rendering at position {0},{1} with widths {2},{3}", patchLatLong.x, patchLatLong.y, widths.x, widths.y);
+
+        //save texture
+        Graphics.Blit(sourceTexture, goalRender, blitMaterial, -1);
         SaveRenderImage(goalRender);
-        //save material?
+
+        //create patch material
         var patchMaterial = new Material(Shader.Find("Unlit/FromPatchToSkybox2"));
-        patchMaterial.SetFloat("_OffsetX", objectLatLong.x);
-        patchMaterial.SetFloat("_OffsetY", objectLatLong.y);
-        patchMaterial.SetFloat("_Height", 0.3f);
-        patchMaterial.SetFloat("_Width", 0.3f);
-        //patchMaterial.SetFloat("_MinY", minY);
-        //patchMaterial.SetFloat("_MaxY", maxY);
-        //patchMaterial.SetFloat("_OffsetX", minX);
-        //patchMaterial.SetFloat("_OffsetY", maxX);
-        //patchMaterial.SetFloat("_Width", 0.5f);
-        //patchMaterial.SetFloat("_Height", 0.5f);
+        patchMaterial.SetFloat("_OffsetX", patchLatLong.x);
+        patchMaterial.SetFloat("_OffsetY", patchLatLong.y);
+        patchMaterial.SetFloat("_Height", widths.x);
+        patchMaterial.SetFloat("_Width", widths.y);
 
-        var savedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/GeneratedTextures/" + patchName + ".png");
-
+        //load texture
+        var savedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/GeneratedTextures/" + patchName + imageOffset + ".png");
         patchMaterial.SetTexture("_Patch", savedTexture);
+
+        //save material
         AssetDatabase.CreateAsset(patchMaterial, "Assets/GeneratedMaterials/"+patchName+".mat");
         patchMesh.material = patchMaterial;
     }
