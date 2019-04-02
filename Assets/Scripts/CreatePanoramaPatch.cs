@@ -52,8 +52,8 @@ public class CreatePanoramaPatch : MonoBehaviour {
         Debug.Log(size);
         var results = Vector2.zero;
         var direction = centre.normalized;
-        var orthoX = Vector3.Cross(-direction, Vector3.up);
-        var orthoY = Vector3.Cross(direction, orthoX);
+        var orthoX = Vector3.Cross(-direction, Vector3.up).normalized ;
+        var orthoY = Vector3.Cross(direction, orthoX).normalized;
 
         //check every corner and find max offset for x and y
         for (int i = 0; i < 8; i++) {
