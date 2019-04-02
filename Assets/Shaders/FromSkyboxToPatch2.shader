@@ -75,10 +75,11 @@
 		float3 orthoY = cross(viewDir,orthoX);
 
 		float2 uv = input.uv;
-		viewDir += (uv.x - 0.5)*orthoX;
-		viewDir += (uv.y - 0.5)*orthoY;
-
-		return texCUBE(_Cube, normalize(viewDir));
+		viewDir += (uv.x - 0.5)*orthoX*_Width;
+		viewDir += (uv.y - 0.5)*orthoY*_Height;
+		//return float4(_Width, _Height, 0, 1);
+		return tex2D(_MainTex, ToRadialCoords(normalize(viewDir)));
+		//return texCUBE(_Cube, normalize(viewDir));
 	}
 		ENDCG
 	}

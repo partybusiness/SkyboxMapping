@@ -98,30 +98,20 @@
 
 	float4 frag(vertexOutput input) : COLOR
 	{
-		//input.viewDir;
-		//float2 coords = ToRadialCoords(normalize(input.viewDir));
-		//float3 offsetDirection = FromLatLongToDirection((coords.y+_OffsetY)/_Height, (coords.x+_OffsetX) / _Width);
-		//float2 offsetCoords = ToRadialCoords(normalize(offsetDirection));
+		float3 centreDirection = FromLatLongToDirection(_OffsetY, _OffsetX);
 
-		float3 normDirection = normalize(input.viewDir);
-		float3 rotatedDirection = //mul(rotationX(_OffsetY*UNITY_PI), mul(rotationY((-_OffsetX+0.5) * UNITY_PI), float4(normDirection, 0))).xyz;
-			mul(rotationY(_OffsetX*UNITY_PI), mul(rotationX((-_OffsetY + 0.5) * UNITY_PI), float4(normDirection, 0))).xyz;
-			//mul(rotationX(_OffsetY*UNITY_PI),mul(rotationY(-_OffsetX*UNITY_PI),float4(normDirection,0))).xyz;
-		//rotate this according to _OffsetX and _OffsetY
+		float3 orthoX = normalize(cross(-centreDirection,float3(0,1,0)));
+		float3 orthoY = normalize(cross(centreDirection,orthoX));
 
-		/*float ratio = dot(centreDirection, -viewDir);
-		viewDir /= ratio;
-		float3 orthoX = cross(centreDirection, float3(0, 1, 0));
-		float3 orthoY = cross(-centreDirection, orthoX);
+		float3 viewDir = normalize(input.viewDir);
 
-		float xval = dot(orthoX, viewDir)*_Width;
-		float yval = dot(orthoY, viewDir)*_Height;*/
-		//float3 viewDir = input.viewDir/parallel;
-		//latlong.x = (latlong.x - _OffsetX)/_Width +0.5;
-		//latlong.y = (latlong.y - _OffsetY)/_Height+0.5;
-		//return tex2D(_Patch, float2(xval+0.5, yval+0.5));
-		//return (tex2D(_Patch, offsetCoords.xy));
-		return float4(rotatedDirection,1);
+		float2 planePosition = float2(dot(viewDir, orthoX), dot(viewDir, orthoY));
+		float ratio = dot(viewDir, centreDirection);
+		planePosition /= ratio;
+		planePosition /= float2(_Width, _Height);
+		planePosition += 0.5;
+
+		return tex2D(_Patch, planePosition);
 	}
 		ENDCG
 	}
