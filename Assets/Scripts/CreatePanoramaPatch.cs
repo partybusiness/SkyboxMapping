@@ -92,8 +92,8 @@ public class CreatePanoramaPatch : MonoBehaviour {
         blitMaterial.SetTexture("_Cube", cubemap);
         blitMaterial.SetFloat("_OffsetX", patchLatLong.x);
         blitMaterial.SetFloat("_OffsetY", patchLatLong.y);
-        blitMaterial.SetFloat("_Height", widths.x);
-        blitMaterial.SetFloat("_Width", widths.y);
+        blitMaterial.SetFloat("_Height", 1f/widths.x);
+        blitMaterial.SetFloat("_Width", 1f/widths.y);
 
         Debug.LogFormat("rendering at position {0},{1} with widths {2},{3}", patchLatLong.x, patchLatLong.y, widths.x, widths.y);
 
@@ -105,8 +105,8 @@ public class CreatePanoramaPatch : MonoBehaviour {
         var patchMaterial = new Material(Shader.Find("Unlit/FromPatchToSkybox2"));
         patchMaterial.SetFloat("_OffsetX", patchLatLong.x);
         patchMaterial.SetFloat("_OffsetY", patchLatLong.y);
-        patchMaterial.SetFloat("_Height", widths.x);
-        patchMaterial.SetFloat("_Width", widths.y);
+        patchMaterial.SetFloat("_Height", 1f/widths.x);
+        patchMaterial.SetFloat("_Width", 1f/widths.y);
 
         //load texture
         var savedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/GeneratedTextures/" + patchName + imageOffset + ".png");

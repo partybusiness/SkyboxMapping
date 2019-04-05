@@ -59,9 +59,9 @@
 		latitude *= UNITY_PI;
 
 		float3 coords = float3(0, 0, 0);
-		coords.y = -cos(latitude)*1;
-		coords.z = cos(longitude);
-		coords.x = sin(longitude);
+		coords.y = -cos(latitude);
+		coords.z = cos(longitude)*sin(latitude);//need to adjust scale of z & x to account for y? tried *sin(latitude)
+		coords.x = sin(longitude)*sin(latitude);
 		//float longitude = atan2(normalizedCoords.z, normalizedCoords.x);
 
 		return normalize(coords);
@@ -71,8 +71,8 @@
 	{
 		float3 viewDir = FromLatLongToDirection(_OffsetY, _OffsetX);
 
-		float3 orthoX = cross(-viewDir,float3(0,1,0));
-		float3 orthoY = cross(viewDir,orthoX);
+		float3 orthoX = normalize(cross(-viewDir,float3(0,1,0)));
+		float3 orthoY = normalize(cross(viewDir,orthoX));
 
 		float2 uv = input.uv;
 		viewDir += (uv.x - 0.5)*orthoX*_Width;

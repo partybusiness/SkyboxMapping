@@ -67,9 +67,9 @@
 		latitude *= UNITY_PI;
 
 		float3 coords = float3(0, 0, 0);
-		coords.y = -cos(latitude) * 1;
-		coords.z = cos(longitude);
-		coords.x = sin(longitude);
+		coords.y = -cos(latitude);
+		coords.z = cos(longitude)*sin(latitude);
+		coords.x = sin(longitude)*sin(latitude);
 
 		return normalize(coords);
 	}
