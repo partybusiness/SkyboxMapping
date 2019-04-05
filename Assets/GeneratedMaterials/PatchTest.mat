@@ -55,7 +55,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Patch:
-        m_Texture: {fileID: 2800000, guid: 1475650666dacc549853be8f8930ed63, type: 3}
+        m_Texture: {fileID: 2800000, guid: 203fccd8b87c1544aa5adae8bd6305c0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -66,11 +66,11 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _MaxX: 0.276
-    - _MaxY: 0.35
+    - _MaxX: 0.75
+    - _MaxY: 0.75
     - _Metallic: 0
-    - _MinX: 0.07
-    - _MinY: 0.167
+    - _MinX: 0.25
+    - _MinY: 0.25
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02

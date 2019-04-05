@@ -66,9 +66,6 @@ public class CreatePanoramaPatch : MonoBehaviour {
             results.y = Mathf.Max(results.y, cornerResults.y);
         }
 
-        
-
-        
         return results*2f;
     } 
 

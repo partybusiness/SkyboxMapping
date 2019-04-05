@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: patch
-  m_Shader: {fileID: 4800000, guid: 2e6c6895ec0fd5244ab90ad05c876343, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0c3e946d8a9d839478896d8d9023d9df, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -23,8 +23,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _MaxX: 0.46200973
-    - _MaxY: 0.69960845
-    - _MinX: 0.3417014
-    - _MinY: 0.52094615
+    - _Height: 0.16633731
+    - _OffsetX: -0.50134456
+    - _OffsetY: 0.49592024
+    - _Width: 0.16525115
     m_Colors: []
