@@ -379,6 +379,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1817605457}
   - component: {fileID: 1817605456}
+  - component: {fileID: 1817605459}
   - component: {fileID: 1817605458}
   m_Layer: 0
   m_Name: PatchGenerator
@@ -418,7 +419,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -35.68, y: -8.5, z: 0}
---- !u!114 &1817605458
+--- !u!328 &1817605458
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1817605455}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 0}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: _MainTex
+  m_RenderMode: 4
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 0
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
+  m_Url: 
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+--- !u!114 &1817605459
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -426,10 +458,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1817605455}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ee92e852dad26c418e65bfa92685c53, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a7a359c1d54f6d43ba67c029309d0ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftEyeTexture: {fileID: 0}
-  RightEyeTexture: {fileID: 0}
+  player: {fileID: 1817605458}
   patchName: patch_{0}
-  generateMaterial: 0
