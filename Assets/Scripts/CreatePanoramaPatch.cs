@@ -37,7 +37,7 @@ public class CreatePanoramaPatch : MonoBehaviour {
 
     [SerializeField]
     private Texture panoramaTexture;
-
+    
     [SerializeField]
     private Cubemap cubemap;
 
@@ -45,7 +45,7 @@ public class CreatePanoramaPatch : MonoBehaviour {
     private Vector2 imageSize = new Vector2(512,512);
 
     [SerializeField]
-    private string patchName = "patch";
+    public string patchName = "patch";
 
     private Vector2 MaxOffset(Vector3 centre, Vector3 size)
     {
@@ -69,7 +69,7 @@ public class CreatePanoramaPatch : MonoBehaviour {
         return results*2f;
     } 
 
-    public void GeneratePatchTexture(Texture sourceTexture, string imageOffset = "")
+    public void GeneratePatchTexture(Texture sourceTexture, string imageOffset = "", bool newMaterial = true)
     {
         //find min and max for selected mesh
         var patchTransform = patchMesh.transform;
@@ -86,13 +86,14 @@ public class CreatePanoramaPatch : MonoBehaviour {
         var goalRender = new RenderTexture(Mathf.RoundToInt(imageSize.x), Mathf.RoundToInt(imageSize.y), 16);
         var blitMaterial = new Material(Shader.Find("Unlit/FromSkyboxToPatch2"));
         
-        blitMaterial.SetTexture("_Cube", cubemap);
+        //blitMaterial.SetTexture("_Cube", cubemap);
+        //SkyboxToPatch2 relies entirely on the source texture rather than the cubemap
         blitMaterial.SetFloat("_OffsetX", patchLatLong.x);
         blitMaterial.SetFloat("_OffsetY", patchLatLong.y);
         blitMaterial.SetFloat("_Height", widths.x);
         blitMaterial.SetFloat("_Width", widths.y);
 
-        Debug.LogFormat("rendering at position {0},{1} with widths {2},{3}", patchLatLong.x, patchLatLong.y, widths.x, widths.y);
+        //Debug.LogFormat("rendering at position {0},{1} with widths {2},{3}", patchLatLong.x, patchLatLong.y, widths.x, widths.y);
 
         //save texture
         Graphics.Blit(sourceTexture, goalRender, blitMaterial, -1);
@@ -105,13 +106,17 @@ public class CreatePanoramaPatch : MonoBehaviour {
         patchMaterial.SetFloat("_Height", widths.x);
         patchMaterial.SetFloat("_Width", widths.y);
 
-        //load texture
-        var savedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/GeneratedTextures/" + patchName + imageOffset + ".png");
-        patchMaterial.SetTexture("_Patch", savedTexture);
+        if (newMaterial)
+        {
 
-        //save material
-        AssetDatabase.CreateAsset(patchMaterial, "Assets/GeneratedMaterials/"+patchName+".mat");
-        patchMesh.material = patchMaterial;
+            //load texture
+            var savedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/GeneratedTextures/" + patchName + imageOffset + ".png");
+            patchMaterial.SetTexture("_Patch", savedTexture);
+
+            //save material
+            AssetDatabase.CreateAsset(patchMaterial, "Assets/GeneratedMaterials/" + patchName + ".mat");
+            patchMesh.material = patchMaterial;
+        }
     }
 
     private void SaveRenderImage(RenderTexture goalRender)

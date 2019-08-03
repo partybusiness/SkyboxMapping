@@ -23,8 +23,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Height: 0.16633731
-    - _OffsetX: -0.50134456
-    - _OffsetY: 0.49592024
-    - _Width: 0.16525115
+    - _Height: 0.42399183
+    - _OffsetX: -0.47157037
+    - _OffsetY: 0.25548708
+    - _Width: 0.47736758
     m_Colors: []

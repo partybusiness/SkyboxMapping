@@ -88,6 +88,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -176,6 +177,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -362,7 +364,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1498019020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.24, y: -0.03, z: 1.18}
+  m_LocalPosition: {x: 0.88, y: -0.03, z: 6.83}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 970745059}
@@ -377,6 +379,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1817605457}
   - component: {fileID: 1817605456}
+  - component: {fileID: 1817605458}
   m_Layer: 0
   m_Name: PatchGenerator
   m_TagString: Untagged
@@ -415,3 +418,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -35.68, y: -8.5, z: 0}
+--- !u!114 &1817605458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1817605455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ee92e852dad26c418e65bfa92685c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LeftEyeTexture: {fileID: 0}
+  RightEyeTexture: {fileID: 0}
+  patchName: patch_{0}
+  generateMaterial: 0
