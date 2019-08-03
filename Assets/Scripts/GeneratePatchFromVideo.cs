@@ -25,6 +25,7 @@ public class GeneratePatchFromVideo : MonoBehaviour {
                 patchMaker = GetComponent<CreatePanoramaPatch>();
             //player.frame
             patchMaker.patchName = string.Format(patchName, player.frame);
+            patchMaker.GeneratePatchTexture(player.texture, "", false);
         }
         ScreenCapture.CaptureScreenshotAsTexture();
     }
