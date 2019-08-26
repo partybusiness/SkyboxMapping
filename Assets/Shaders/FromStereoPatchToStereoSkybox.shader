@@ -1,8 +1,7 @@
-﻿Shader "Unlit/FromPatchToStereoSkybox"
+﻿Shader "Unlit/FromStereoPatchToStereoSkybox"
 {
 	Properties{
-		[NoScaleOffset]_PatchLeft("Patch Map Left", 2D) = "white" {}
-		[NoScaleOffset]_PatchRight("Patch Map Right", 2D) = "white" {}
+		[NoScaleOffset]_Patch("Patch Map", 2D) = "white" {}
 		_OffsetX("OffsetX", float) = 0.0
 		_OffsetY("OffsetY", float) = 0.0
 		_Width("Width", float) = 0.3
@@ -14,8 +13,7 @@
 #pragma vertex vert
 #pragma fragment frag
 #include "UnityCG.cginc"
-		sampler2D _PatchLeft;
-		sampler2D _PatchRight;
+		sampler2D _Patch;
 	float _OffsetX;
 	float _OffsetY;
 	float _Width;
@@ -107,11 +105,9 @@
 		planePosition /= ratio;
 		planePosition /= float2(_Width, _Height);
 		planePosition += 0.5;
-
-		if (unity_StereoEyeIndex == 0)
-			return tex2D(_PatchLeft, planePosition);
-		else
-			return tex2D(_PatchRight, planePosition);
+		planePosition.x *= 0.5;
+		planePosition.x += unity_StereoEyeIndex* 0.5;
+		return tex2D(_Patch, planePosition);
 	}
 		ENDCG
 	}
