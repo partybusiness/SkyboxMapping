@@ -1,4 +1,4 @@
-﻿Shader "Unlit/FromPatchToStereoSkybox"
+﻿Shader "Unlit/HoverPatch"
 {
 	Properties{
 		[NoScaleOffset]_PatchLeft("Patch Map Left", 2D) = "white" {}
@@ -9,6 +9,9 @@
 		_Height("Height", float) = 0.3
 	}
 		SubShader{
+			Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
+			ZWrite Off
+			Blend SrcAlpha OneMinusSrcAlpha
 		Pass{
 		CGPROGRAM
 #pragma vertex vert
@@ -107,11 +110,14 @@
 		planePosition /= ratio;
 		planePosition /= float2(_Width, _Height);
 		planePosition += 0.5;
-
+		float4 col;
 		if (unity_StereoEyeIndex == 0)
-			return tex2D(_PatchLeft, planePosition);
+			col = tex2D(_PatchLeft, planePosition);
 		else
-			return tex2D(_PatchRight, planePosition);
+			col = tex2D(_PatchRight, planePosition);
+
+		col.a = saturate((sin(_Time.z * 5.0)*0.3 + 0.7 - 1.0) * 3.0 + 1.3);
+		return col;
 	}
 		ENDCG
 	}
